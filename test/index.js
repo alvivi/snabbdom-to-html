@@ -1,15 +1,14 @@
 
-var test = require('tape')
 var h = require('snabbdom/h')
+var init = require('../lib/init').default
+var modules = require('../lib/modules').default
+var test = require('tape')
 var thunk = require('snabbdom/thunk')
-var toHTML = require('../')
-var init = require('../init')
-var modules = require('../modules')
+var toHTML = require('../lib').default
 
 test('Main export', function (t) {
   t.equal(typeof toHTML, 'function', 'is function')
   t.equal(toHTML(h('i', { props: { title: 'Italics' } }, ':-)')), '<i title="Italics">:-)</i>', 'and it works')
-
   t.end()
 })
 
@@ -44,9 +43,9 @@ test('Modules', function (t) {
   var vnode
   var html
   var renderToString = init([
+    modules.attributes,
     modules.class,
     modules.props,
-    modules.attributes,
     modules.style
   ])
 
@@ -68,7 +67,7 @@ test('Modules', function (t) {
   })
   t.equal(renderToString(vnode), '<div style="color: red; font-size: 2em; line-height: 1.3"></div>', 'style 2')
 
-    // `delayed` and hook properties
+  // `delayed` and hook properties
 
   vnode = h('div', {
     style: {
@@ -152,10 +151,10 @@ test('Modules', function (t) {
 
   html =
     '<svg width="92" height="38" viewBox="0 0 92 38" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' +
-      '<title>Balls</title>' +
-      '<g fill="none" fill-rule="evenodd" stroke="#979797" stroke-width="3">' +
-        '<circle cx="19" cy="19" r="17" /><circle cx="73" cy="19" r="17" />' +
-      '</g>' +
+    '<title>Balls</title>' +
+    '<g fill="none" fill-rule="evenodd" stroke="#979797" stroke-width="3">' +
+    '<circle cx="19" cy="19" r="17" /><circle cx="73" cy="19" r="17" />' +
+    '</g>' +
     '</svg>'
   vnode = h('svg', {
     attrs: {
@@ -166,19 +165,19 @@ test('Modules', function (t) {
       'xmlns:xlink': 'http://www.w3.org/1999/xlink'
     }
   }, [
-    h('title', 'Balls'),
-    h('g', {
-      attrs: {
-        fill: 'none',
-        'fill-rule': 'evenodd',
-        stroke: '#979797',
-        'stroke-width': 3
-      }
-    }, [
-      h('circle', { props: { cx: '19', cy: '19', r: '17' } }),
-      h('circle', { props: { cx: '73', cy: '19', r: '17' } })
+      h('title', 'Balls'),
+      h('g', {
+        attrs: {
+          fill: 'none',
+          'fill-rule': 'evenodd',
+          stroke: '#979797',
+          'stroke-width': 3
+        }
+      }, [
+          h('circle', { props: { cx: '19', cy: '19', r: '17' } }),
+          h('circle', { props: { cx: '73', cy: '19', r: '17' } })
+        ])
     ])
-  ])
   t.equal(renderToString(vnode), html, 'svg')
 
   vnode = h('label', {
@@ -186,9 +185,9 @@ test('Modules', function (t) {
       htmlFor: 'beep'
     }
   }, [
-    'Edge case ',
-    h('input', { attrs: { type: 'text', value: 'Shit' } })
-  ])
+      'Edge case ',
+      h('input', { attrs: { type: 'text', value: 'Shit' } })
+    ])
   t.equal(renderToString(vnode), '<label for="beep">Edge case <input type="text" value="Shit"></label>', 'htmlFor, nested tag and text together')
 
   // class
@@ -247,7 +246,7 @@ test('Protect against `data` being undefined', function (t) {
 test('Support thunks', function (t) {
   var vnode = thunk('span', numberInSpan, [22])
 
-  function numberInSpan (n) {
+  function numberInSpan(n) {
     return h('span', 'Number is ' + n)
   }
 

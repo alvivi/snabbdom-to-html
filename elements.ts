@@ -1,12 +1,16 @@
 
 // All SVG children elements, not in this list, should self-close
 
-exports.CONTAINER = {
+export interface ElementChecker {
+  [selector: string]: true | undefined
+}
+
+export const CONTAINER_ELEMENTS: ElementChecker = {
   // http://www.w3.org/TR/SVG/intro.html#TermContainerElement
   'a': true,
   'defs': true,
-  'glyph': true,
   'g': true,
+  'glyph': true,
   'marker': true,
   'mask': true,
   'missing-glyph': true,
@@ -22,8 +26,7 @@ exports.CONTAINER = {
 }
 
 // http://www.w3.org/html/wg/drafts/html/master/syntax.html#void-elements
-
-exports.VOID = {
+export const VOID_ELEMENTS: ElementChecker = {
   area: true,
   base: true,
   br: true,
