@@ -1,4 +1,8 @@
 
+// REVIEW: the 'dom' module dependency found in tsconfig can be removed if
+//         parse-sel is rewritten in typescript and it does not export a
+//         Element type. A simple interface will work.
+
 declare module 'parse-sel' {
   function parseSelector(selector: String, upper?: boolean): Element
   export = parseSelector
@@ -11,6 +15,11 @@ declare interface VNode<E extends Element> {
   data?: VNodeData<E>
   elm?: E | Text
   key?: string | number
+
+  // REVIEW: note that although string? is the correct type for this field,
+  //         the original Snabbdom type definitions are incorrect and
+  //         incopatible with this library.
+
   sel?: string // BUG: Snabbdom sel field is not optional
   text?: string
 }
